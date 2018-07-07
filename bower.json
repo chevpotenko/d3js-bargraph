@@ -1,0 +1,20 @@
+{
+  "name": "d3js",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "Oleksiy Chevpotenko <ochevpotenko@gmail.com>"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "d3": "^5.5.0"
+  }
+}
