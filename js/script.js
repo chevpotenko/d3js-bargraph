@@ -8,6 +8,7 @@ var width = 800,
 var axisX = d3.axisBottom(x);   
 var axisY = d3.axisLeft(y).ticks(5);
 
+
 var canvas = d3.select('body').append('svg')
                 .attr('class', 'canvas')
                 .attr('width', width)
@@ -18,10 +19,12 @@ var canvas = d3.select('body').append('svg')
                 .attr('height', height - padding.y)
                 .attr('transform', 'translate('+ 50 +', 10)');
 
+
+var tooltip = d3.select("body").append("div").attr("class", "toolTip");
+
 d3.json('js/data.json').then((res) => {
 
     var data = res.books;
-    console.log(data);
 
     x.domain(data.map((d) => { return d.title }));
     y.domain([0, d3.max(data, (d) => { return d.pages })]);
@@ -37,9 +40,9 @@ d3.json('js/data.json').then((res) => {
 
     canvas.append('g')
         .attr('class', 'y axis')
-        .call(axisY)
+        .call(d3.axisLeft(y).tickSizeInner([-width + padding.x ]))
         .append('text')
-        .attr('transform', 'translate(10, 0) rotate(-90)')
+        .attr('transform', 'translate(-10, 3)')
         .attr('fill', 'black')        
         .text('Pages');
     
@@ -54,5 +57,26 @@ d3.json('js/data.json').then((res) => {
         .attr('width', x.bandwidth())
         .attr('y', (d) => { return y(d.pages) })
         .attr('height', (d) => { return height - padding.y - y(d.pages) })
+        
+
+    canvas.selectAll('.bars rect')
+        .on("mousemove", function(d) {
+            d3.select(this)
+                .transition()
+                .duration("200")               
+                .style("fill", "red");
+            tooltip
+            .style("left", d3.event.pageX - 50 + "px")
+            .style("top", d3.event.pageY - 30 + "px")
+            .style("display", "inline-block")
+            .html('Author: ' + d.author);
+        })
+        .on("mouseout", function(d, i) {
+            d3.select(this)
+                .transition()
+                .duration("200")
+                .style("fill", "steelblue");
+            tooltip.style("display", "none");
+        });
         
 });
